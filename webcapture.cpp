@@ -7,6 +7,8 @@
 #include <QPainter>
 #include <QImage>
 
+/* based on a example found in qt library */
+
 
 WebCapture::WebCapture(const QSize &viewport): QObject()
 {
@@ -50,7 +52,7 @@ void WebCapture::saveFrame(QWebFrame *frame)
     if (frameHeight > viewport.height())
         viewport.setHeight(frameHeight);
 
-    QImage image(viewport, QImage::Format_Mono);
+    QImage image(viewport, QImage::Format_RGB32);
     image.fill(Qt::white);
 
     QPainter painter(&image);
