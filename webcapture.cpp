@@ -6,13 +6,16 @@
 #include <QWebElement>
 #include <QPainter>
 #include <QImage>
+#include <QByteArray>
+#include <QBuffer>
 
 /* based on a example found in qt library */
 
 
-WebCapture::WebCapture(const QSize &viewport): QObject()
+WebCapture::WebCapture(const QSize &viewport, bool direct): QObject()
 {
     this->viewport = viewport;
+    this->direct = direct;
 
     m_page.mainFrame()->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);
     m_page.mainFrame()->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
@@ -66,10 +69,19 @@ void WebCapture::saveFrame(QWebFrame *frame)
     /*
     QByteArray img_data = QByteArray((const char *) image.bits(), image.byteCount());
 
-    QString str = QString(img_data.toHex());
-    std::cout << str.toStdString() << std::endl;
     */
 
-    image.save(fileName);
+    if (direct) {
+	QByteArray ba;
+	QBuffer buf(&ba);
+	image.save(&buf, "PNG");
+
+	std::cout << ba.toBase64().data() << std::endl;
+	return;
+    } else {
+    
+    	image.save(fileName);
+	std::cout << "Save file: "<<qPrintable(fileName)<<std::endl;
+    }
 }
 

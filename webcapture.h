@@ -9,7 +9,7 @@ class WebCapture : public QObject
     Q_OBJECT
 
 public:
-    WebCapture(const QSize &size);
+    WebCapture(const QSize &size, bool direct=false);
     void load(const QUrl &url, const QString &outputFileName);
 
 signals:
@@ -24,6 +24,8 @@ private:
 
     QSize viewport;
     void saveFrame(QWebFrame *frame);
+
+    bool direct;
 };
 
 #endif
